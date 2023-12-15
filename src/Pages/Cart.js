@@ -23,6 +23,26 @@ const Cart = ({ products, setProducts, cart, quantities, setQuantities, setCart,
   const [isLoading, setLoading] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");
+  useEffect(() => {
+    const updatedCart = cart.map((cartItem) => {
+      const correspondingProduct = products.find((product) => product.id === cartItem.id);
+  
+      if (correspondingProduct) {
+        return {
+          ...cartItem,
+          price: correspondingProduct.price,
+          stock: correspondingProduct.stock,
+        };
+      }
+  
+      return cartItem;
+    });
+  
+    // Check if the updated cart is different from the current cart before setting it
+    if (JSON.stringify(updatedCart) !== JSON.stringify(cart)) {
+      setCart(updatedCart);
+    }
+  }, [products, cart, setCart]);
   
   useEffect(() => {
     function simulateNetworkRequest() {

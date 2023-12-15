@@ -5,16 +5,20 @@ export default function CardBarChart({ transactionData }) {
   const chartRef = useRef(null);
 
   useEffect(() => {
-    // Use a dictionary to accumulate total prices for each product name
+    // Use a dictionary to accumulate total prices and prices for each product name
     const totalPricesMap = {};
+    const pricesMap = {};
+    
     transactionData.rows.forEach((row) => {
-      const { name, total } = row;
+      const { name, total, price } = row;
       totalPricesMap[name] = (totalPricesMap[name] || 0) + total;
+      pricesMap[name] = price;
     });
 
-    // Extract product names and total prices from the accumulated totals
+    // Extract product names, total prices, and prices from the accumulated totals
     const productNames = Object.keys(totalPricesMap);
     const totalPrices = Object.values(totalPricesMap);
+    const prices = productNames.map(name => pricesMap[name]);
 
     let config = {
       type: "bar",
@@ -29,6 +33,14 @@ export default function CardBarChart({ transactionData }) {
             data: totalPrices,
             barThickness: 15,
           },
+          {
+            label: "Price",
+            fill: false,
+            backgroundColor: "#DA0C81",
+            borderColor: "#DA0C81",
+            data: prices,
+            barThickness: 15,
+          },
         ],
       },
       options: {
@@ -38,7 +50,6 @@ export default function CardBarChart({ transactionData }) {
           display: false,
           text: "Orders Chart",
         },
-        // ... (unchanged)
       },
     };
 
@@ -50,7 +61,7 @@ export default function CardBarChart({ transactionData }) {
     }
 
     window.myBar = new Chart(ctx, config);
-  }, [transactionData]);
+  }, [transactionData])
 
   return (
     <>

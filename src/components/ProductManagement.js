@@ -1,20 +1,19 @@
 
 import { Button, Modal, Form, Alert } from "react-bootstrap";
 import React, { useState, useEffect } from "react";
-export default function ProductManagement({Input,  products, setProducts, newProduct, setNewProduct, categories, cart, setCart, setSelectedProducts, selectedProducts }) {
+export default function ProductManagement({ Input, products, setProducts, newProduct, setNewProduct, categories, cart, setCart, setSelectedProducts, selectedProducts }) {
   const [show, setShow] = useState(false);
   const [open, setOpen] = useState(false);
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
-  
-  
+
   const [editIndex, setEditIndex] = useState(-1);
   const [selectedCategory, setSelectedCategory] = useState("");
-  
+
   const [isLoading, setLoading] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
-  
+
   useEffect(() => {
     function simulateNetworkRequest() {
       return new Promise((resolve) => setTimeout(resolve, 2000));
@@ -41,26 +40,26 @@ export default function ProductManagement({Input,  products, setProducts, newPro
     };
   }, [showAlert]);
 
- 
+
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     setNewProduct((prevProduct) => ({
       ...prevProduct,
       image: file,
     }));
-  
+
   };
 
   const addProduct = (event) => {
     event.preventDefault();
-  
+
     if (
       newProduct.name.trim() === "" ||
       newProduct.price.trim() === "" ||
       newProduct.stock.trim() === "" ||
       newProduct.category.trim() === "" ||
       !newProduct.image
-      
+
     ) {
       // Show an alert for required fields
       setShowAlert({
@@ -69,12 +68,12 @@ export default function ProductManagement({Input,  products, setProducts, newPro
       });
       return;
     }
-  
+
     // Check if the product with the same name already exists
     const isProductExists = products.some(
       (product) => product.name === newProduct.name
     );
-  
+
     if (isProductExists) {
       // Show an alert that the product is already added
       setShowAlert({
@@ -87,7 +86,7 @@ export default function ProductManagement({Input,  products, setProducts, newPro
       if (fileInput) {
         fileInput.value = "";
       }
-  
+
       // Add a delay before resetting loading and showing success message
       setTimeout(() => {
         setProducts([...products, newProduct]);
@@ -98,23 +97,23 @@ export default function ProductManagement({Input,  products, setProducts, newPro
           price: "",
           stock: "",
           category: "",
-          
-         
+
+
         }));
-  
+
         // Reset loading and show success alert after 2 seconds
         setLoading(false);
         setShow(false)
-        
+
       }, 2000);
       setShowAlert({
         variant: "success",
         message: "Successfully added!",
       });
     }
-    
+
   };
-  
+
   const handleCategoryChange = (e) => {
     setSelectedCategory(e.target.value);
     setNewProduct({ ...newProduct, category: e.target.value });
@@ -130,47 +129,47 @@ export default function ProductManagement({Input,  products, setProducts, newPro
     const updatedProducts = [...products];
     const updatedCart = [...cart];
     const updatedSelectedProducts = [...selectedProducts];
-  
+
     // Remove the product from the products array
     const deletedProduct = updatedProducts.splice(index, 1)[0];
-  
+
     // Remove the corresponding product from the cart array, if it exists
     const cartIndex = updatedCart.findIndex(product => product.id === deletedProduct.id);
     if (cartIndex !== -1) {
       updatedCart.splice(cartIndex, 1);
     }
-  
+
     // Remove the product from the selectedProducts array, if it exists
     const selectedProductIndex = updatedSelectedProducts.indexOf(deletedProduct.id);
     if (selectedProductIndex !== -1) {
       updatedSelectedProducts.splice(selectedProductIndex, 1);
     }
-  
+
     // Update the state with the modified arrays
     setProducts(updatedProducts);
     setCart(updatedCart);
     setSelectedProducts(updatedSelectedProducts);
   };
-  
-  
+
+
 
   const Close = () => {
     setSelectedCategory('');
     setEditIndex(-1);
     setOpen(false);
-    
+
     // Find the maximum ID in the existing products
     const maxId = Math.max(...products.map(product => product.id));
 
     setNewProduct((prevProduct) => ({
-        id: maxId + 1,
-        name: "",
-        price: "",
-        stock: "",
-        category: "",
+      id: maxId + 1,
+      name: "",
+      price: "",
+      stock: "",
+      category: "",
     }));
-}
-const updateProduct = () => {
+  }
+  const updateProduct = () => {
     if (
       newProduct.name.trim() === "" ||
       newProduct.price.trim() === "" ||
@@ -183,12 +182,12 @@ const updateProduct = () => {
       });
       return;
     }
-  
+
     const isProductExists = products.some(
       (product, index) =>
         index !== editIndex && product.name === newProduct.name
     );
-  
+
     if (isProductExists) {
       // Show an alert that the product name already exists
       setShowAlert({
@@ -206,15 +205,15 @@ const updateProduct = () => {
           // Adding a new product
           updatedProducts.push(newProduct);
         }
-  
+
         setProducts(updatedProducts);
         setSelectedCategory('');
         setLoading(false);
         setEditIndex(-1);
         setOpen(false);
-  
+
         const maxId = Math.max(...updatedProducts.map((product) => product.id));
-  
+
         setNewProduct({
           id: maxId + 1,
           name: "",
@@ -222,10 +221,10 @@ const updateProduct = () => {
           stock: "",
           category: "",
         });
-  
-        
-  
-        
+
+
+
+
       }, 2000);
       setShowAlert({
         variant: "success",
@@ -233,7 +232,14 @@ const updateProduct = () => {
       });
     }
   };
-  
+
+  const handleInputChange = (fieldName, value) => {
+    const isValidInput = /^0$|^[1-9]\d*$/.test(value) || value === '';
+    if (isValidInput) {
+      setNewProduct({ ...newProduct, [fieldName]: value });
+    }
+  };
+
 
   return (
     <>
@@ -266,7 +272,7 @@ const updateProduct = () => {
                 <th className="px-6 bg-blueGray-50 text-blueGray-500 align-middle border border-solid border-blueGray-100 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">
                   Price
                 </th>
-                
+
                 <th className="px-6 bg-blueGray-50 text-blueGray-500 align-middle border border-solid border-blueGray-100 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">
                   Category
                 </th>
@@ -279,89 +285,103 @@ const updateProduct = () => {
               </tr>
             </thead>
             <tbody>
-            {products.map((product, index) => (
-              <tr key={index}>
-                <th className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left">
-                {product.name}
-                </th>
-                <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                {product.price}
-                </td>
-                
-                
-                <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">               
-                {product.category}
-                </td>
-                <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                {product.stock}
-                </td>
-                <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">               
-                <Button onClick={() => editProductHandler(index)} variant="primary">Update</Button>
-                <Button onClick={() => deleteProduct(index)} variant="danger">Delete</Button>
-                </td>
-              </tr> 
-              ))}            
+              {products.map((product, index) => (
+                <tr key={index}>
+                  <th className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left">
+                    {product.name}
+                  </th>
+                  <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
+                    {product.price}
+                  </td>
+
+
+                  <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
+                    {product.category}
+                  </td>
+                  <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
+                    {product.stock}
+                  </td>
+                  <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
+                    <Button onClick={() => editProductHandler(index)} variant="primary">Update</Button>
+                    <Button onClick={() => deleteProduct(index)} variant="danger">Delete</Button>
+                  </td>
+                </tr>
+              ))}
             </tbody>
           </table>
         </div>
       </div>
-      
+
       <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>
           <Modal.Title>Add Product</Modal.Title>
         </Modal.Header>
         {showAlert && (
-              <Alert
-                variant={showAlert.variant}
-                onClose={() => setShowAlert(null)}
-                dismissible
-              >
-                {showAlert.message}
-              </Alert>
-            )}
+          <Alert
+            variant={showAlert.variant}
+            onClose={() => setShowAlert(null)}
+            dismissible
+          >
+            {showAlert.message}
+          </Alert>
+        )}
         <Modal.Body>
-          
-            <Form>
-              
-                <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
-                  <Form.Label>ID</Form.Label>
-                  <Form.Control
-                    className="p-2"
-                    type="text"
-                    value={newProduct.id}  
-                    onChange={(e) => setNewProduct({ ...newProduct, id: e.target.value })} required               
-                    autoFocus
-                    disabled
-                  />
-                  <Form.Label>Product Name</Form.Label>
-                  <Form.Control
-                    className="p-2"
-                    type="text"
-                    value={newProduct.name}
-                    onChange={(e) => setNewProduct({ ...newProduct, name: e.target.value })} required
-                    autoFocus
-                  />
-                  <Form.Label>Price</Form.Label>
-                  <Form.Control
-                    className="p-2"
-                    type="number"
-                    value={newProduct.price}
-                onChange={(e) => setNewProduct({ ...newProduct, price: e.target.value })} required
-                    autoFocus
-                  />
-                  <Form.Label>Stock</Form.Label>
-                  <Form.Control
-                    className="p-2"
-                    type="number"
-                    value={newProduct.stock}
-                   onChange={(e) => setNewProduct({ ...newProduct, stock: e.target.value })} required
-                    
-                    autoFocus
-                  />
-                  <Form.Label>Category</Form.Label><br />
-                  <Form.Select value={selectedCategory} onChange={handleCategoryChange} style={Input} required>
+
+          <Form>
+
+            <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
+              <Form.Label>ID</Form.Label>
+              <Form.Control
+                className="p-2"
+                type="text"
+                value={newProduct.id}
+                onChange={(e) => setNewProduct({ ...newProduct, id: e.target.value })} required
+                autoFocus
+                disabled
+              />
+              <Form.Label>Product Name</Form.Label>
+              <Form.Control
+                className="p-2"
+                type="text"
+                value={newProduct.name}
+                onChange={(e) => setNewProduct({ ...newProduct, name: e.target.value })} required
+                autoFocus
+              />
+              <Form.Label>Price</Form.Label>
+              <Form.Control
+                className="p-2"
+                type="number"
+                value={newProduct.price}
+                onChange={(e) => handleInputChange('price', e.target.value)}
+                required
+                autoFocus
+              />
+              {newProduct.price && /^0[1-9]/.test(newProduct.price) && (
+                <div style={{ color: 'red' }}>First digit of price must be 0 or greater than 0</div>
+              )}
+
+              <Form.Label>Stock</Form.Label>
+              <Form.Control
+                className="p-2"
+                type="number"
+                value={newProduct.stock}
+                onChange={(e) => {
+                  const newStock = e.target.value;
+                  if (/^0$|^[1-9]\d*$/.test(newStock) || newStock === '') {
+                    setNewProduct({ ...newProduct, stock: newStock });
+                  }
+                }}
+                required
+                autoFocus
+              />
+              {newProduct.stock && /^0[1-9]/.test(newProduct.stock) && (
+                <div style={{ color: 'red' }}>First digit of stock must be 0 or greater than 0</div>
+              )}
+
+              <Form.Label>Category</Form.Label><br />
+              <Form.Select value={selectedCategory} onChange={handleCategoryChange} style={Input} required>
                 <option value="" selected disabled>Select Category</option>
-                
+
                 {categories.map((category, index) => (
                   <option key={index} value={category}>
                     {category}
@@ -376,8 +396,8 @@ const updateProduct = () => {
                 style={Input}
                 id="fileInput"
               />
-                </Form.Group>             
-            </Form>       
+            </Form.Group>
+          </Form>
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleClose}>
@@ -393,14 +413,14 @@ const updateProduct = () => {
           <Modal.Title>Edit Product</Modal.Title>
         </Modal.Header>
         {showAlert && (
-              <Alert
-                variant={showAlert.variant}
-                onClose={() => setShowAlert(null)}
-                dismissible
-              >
-                {showAlert.message}
-              </Alert>
-            )}
+          <Alert
+            variant={showAlert.variant}
+            onClose={() => setShowAlert(null)}
+            dismissible
+          >
+            {showAlert.message}
+          </Alert>
+        )}
         <Modal.Body>
           {products.map((product, index) => (
             <Form key={index}>
@@ -434,7 +454,7 @@ const updateProduct = () => {
                     autoFocus
                     required
                   />
-                  
+
                   <Form.Label>Category</Form.Label><br />
                   <Form.Select value={selectedCategory} onChange={handleCategoryChange} className="p-2">
                     <option value="" required>Select Category</option>
