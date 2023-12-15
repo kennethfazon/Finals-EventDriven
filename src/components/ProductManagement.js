@@ -133,7 +133,7 @@ export default function ProductManagement({ Input, products, setProducts, newPro
     // Remove the product from the products array
     const deletedProduct = updatedProducts.splice(index, 1)[0];
 
-    // Remove the corresponding product from the cart array, if it exists
+    
     const cartIndex = updatedCart.findIndex(product => product.id === deletedProduct.id);
     if (cartIndex !== -1) {
       updatedCart.splice(cartIndex, 1);
@@ -326,7 +326,6 @@ export default function ProductManagement({ Input, products, setProducts, newPro
           </Alert>
         )}
         <Modal.Body>
-
           <Form>
 
             <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">

@@ -3,15 +3,12 @@ import { useState, useEffect } from 'react';
 import { Button, Modal, Form, Alert } from 'react-bootstrap';
 
 
-// components
-
 export default function CategoryManagement({ categories, setCategories }) {
 
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
   const [open, setOpen] = useState(false);
-
 
   const Close = () => setOpen(false);
   const handleOpen = (index, category) => {
@@ -22,7 +19,6 @@ export default function CategoryManagement({ categories, setCategories }) {
 
 
   const [editIndex, setEditIndex] = useState(-1);
-
   const [newCategory, setNewCategory] = useState("");
   const [editCategory, setEditCategory] = useState("");
   const [isLoading, setLoading] = useState(false);
@@ -168,8 +164,6 @@ export default function CategoryManagement({ categories, setCategories }) {
                 <th className="px-6 bg-blueGray-50 text-blueGray-500 align-middle border border-solid border-blueGray-100 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">
                   Action
                 </th>
-
-
               </tr>
             </thead>
             <tbody>
@@ -184,11 +178,8 @@ export default function CategoryManagement({ categories, setCategories }) {
                     <Button onClick={() => handleOpen(index, category)} variant="primary">Update</Button>
                     <Button onClick={() => deleteCategory(index)} variant="danger">Delete</Button>
                   </td>
-
                 </tr>
               ))}
-
-
             </tbody>
           </table>
         </div>
@@ -213,8 +204,6 @@ export default function CategoryManagement({ categories, setCategories }) {
           </Alert>
         )}
         <Modal.Body>
-
-
           <Form.Control
             type="text"
             value={newCategory}
@@ -229,8 +218,6 @@ export default function CategoryManagement({ categories, setCategories }) {
           <Button variant="primary" disabled={isLoading} onClick={addCategory}>{isLoading ? 'Adding…' : 'Add Category'}</Button>
         </Modal.Footer>
       </Modal>
-
-
 
       <Modal show={open} onHide={Close}>
         <Modal.Header closeButton>

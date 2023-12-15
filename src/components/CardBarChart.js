@@ -26,7 +26,7 @@ export default function CardBarChart({ transactionData }) {
         labels: productNames,
         datasets: [
           {
-            label: "Total Price",
+            label: "Total Sales",
             fill: false,
             backgroundColor: "#4c51bf",
             borderColor: "#4c51bf",

@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {Button, Modal, Table, Alert} from 'react-bootstrap';
 
-
 const StockManagement = ({ products, Input, setProducts }) => {
   const [show, setShow] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);

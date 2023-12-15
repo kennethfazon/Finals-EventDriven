@@ -5,8 +5,6 @@ import Addcart from '../Pages/Addcart';
 // import { Button } from 'react-bootstrap';
 import React, { useState } from "react";
 
-
-
 function TransactionManagement({products, setProducts, updateTransactionData, cart, setCart, selectedProducts, setSelectedProducts}) {
   
   const [quantities, setQuantities] = useState({});
